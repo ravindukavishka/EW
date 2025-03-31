@@ -10,6 +10,9 @@ export default function BinRequestForm() {
     timeSlot: "",
   });
 
+
+  
+
   const [message, setMessage] = useState("");
   const [error, setError] = useState("");
 
