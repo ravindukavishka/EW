@@ -3,6 +3,7 @@ import axios from "axios";
 import { useNavigate } from "react-router-dom";
 //import { FcGoogle } from "react-icons/fc";
 import { FaUser, FaLock } from "react-icons/fa";
+import { jwtDecode } from "jwt-decode";
 
 export default function Login() {
   const [username, setUsername] = useState("");
@@ -14,28 +15,64 @@ export default function Login() {
   const handleUsernameChange = (e) => setUsername(e.target.value);
   const handlePasswordChange = (e) => setPassword(e.target.value);
 
- const handleSubmit = async (e) => {
-   e.preventDefault();
-   setError(""); // Clear previous errors
-   setSuccessMessage("");
+  //  const handleSubmit = async (e) => {
+  //   e.preventDefault();
+  //   setError("");
+  //   setSuccessMessage("");
 
-   try {
-     const response = await axios.post("http://localhost:5000/users/login", {
-       username, // Send username OR email
-       password,
-     });
+  //   try {
+  //     const response = await axios.post("http://localhost:5000/users/login", {
+  //       username,
+  //       password,
+  //     });
 
-     if (response.data.token) {
-       setSuccessMessage("Login successful! Redirecting...");
-       localStorage.setItem("token", response.data.token);
-       setTimeout(() => navigate("/profile"), 2000);
-     } else {
-       setError("Invalid username or password.");
-     }
-   } catch (err) {
-     setError(err.response?.data?.error || "Login failed. Please try again.");
-   }
- };
+  //     if (response.data.token) {
+  //       setSuccessMessage("Login successful! Redirecting...");
+  //       localStorage.setItem("token", response.data.token);
+
+  //       const decoded = jwtDecode(response.data.token);
+
+  //       // 👇 Check role from token and redirect accordingly
+  //       if (decoded.role === "admin") {
+  //         setTimeout(() => navigate("/admin-dashboard"), 1000);
+  //       } else {
+  //         setTimeout(() => navigate("/profile"), 1000);
+  //       }
+  //     } else {
+  //       setError("Invalid username or password.");
+  //     }
+  //   } catch (err) {
+  //     setError(err.response?.data?.error || "Login failed. Please try again.");
+  //   }
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setError("");
+    setSuccessMessage("");
+
+    try {
+      const response = await axios.post("http://localhost:5000/users/login", {
+        username,
+        password,
+      });
+
+      if (response.data.token) {
+        setSuccessMessage("Login successful! Redirecting...");
+        localStorage.setItem("token", response.data.token);
+
+        // 👉 Hardcoded admin login check
+        if (username === "zzzzz" && password === "12345") {
+          setTimeout(() => navigate("/admin"), 1000);
+        } else {
+          setTimeout(() => navigate("/profile"), 1000);
+        }
+      } else {
+        setError("Invalid username or password.");
+      }
+    } catch (err) {
+      setError(err.response?.data?.error || "Login failed. Please try again.");
+    }
+  };
 
   return (
     <div className="h-screen w-full flex flex-col">
