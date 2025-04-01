@@ -9,7 +9,7 @@ const authMiddleware = (req, res, next) => {
   }
 
   try {
-    // Extract only the token part from "Bearer TOKEN_STRING"
+   
     const tokenParts = token.split(" ");
     if (tokenParts.length !== 2 || tokenParts[0] !== "Bearer") {
       console.log("❌ Invalid token format:", token);
@@ -17,7 +17,7 @@ const authMiddleware = (req, res, next) => {
     }
 
     const decoded = jwt.verify(tokenParts[1], process.env.JWT_SECRET);
-    req.user = decoded; // Attach user data to request
+    req.user = decoded; 
     console.log("✅ Token Verified:", decoded);
     next();
   } catch (error) {
